@@ -1,5 +1,6 @@
 package com.soneca.poc.spark.scores.file;
 
+import com.soneca.poc.spark.scores.core.WordCount;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
@@ -16,25 +17,7 @@ import java.util.Iterator;
  * Simple word count based on file
  * Created by soneca on 14/09/16.
  */
-public class WordCount {
-
-    private static final FlatMapFunction<String, String> WORDS_EXTRACTOR = new FlatMapFunction<String, String>() {
-        public Iterator<String> call(String s) throws Exception {
-            return Arrays.asList(s.split(" ")).iterator();
-        }
-    };
-
-    private static final PairFunction<String, String, Integer> WORDS_MAPPER = new PairFunction<String, String, Integer>() {
-        public Tuple2<String, Integer> call(String s) throws Exception {
-            return new Tuple2<String, Integer>(s, 1);
-        }
-    };
-
-    private static final Function2<Integer, Integer, Integer> WORDS_REDUCER = new Function2<Integer, Integer, Integer>() {
-        public Integer call(Integer integer, Integer integer2) throws Exception {
-            return integer+integer2;
-        }
-    };
+public class FileWordCount extends WordCount {
 
     public static void main(String[] args) {
         if(args.length < 1){
@@ -44,7 +27,7 @@ public class WordCount {
 
         JavaSparkContext context =
                 new JavaSparkContext(
-                        new SparkConf().setAppName("com.soneca.poc.spark.scores.file.WordCount").setMaster("local")
+                        new SparkConf().setAppName("com.soneca.poc.spark.scores.file.FileWordCount").setMaster("local")
                 );
 
         JavaRDD<String> file = context.textFile(args[0]);
